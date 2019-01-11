@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>GIFtastic Assignment</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/reset.css"/>
-    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css"/>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/reset.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+
 </head>
+
 <body>
     <form>
         Add an animal! <br>
-        <input id="animalAdd"type="text" name="animal" value="">
+        <input id="animalAdd" type="text" name="animal" value="">
         <br>
     </form>
     <button id="submitBtn">Add</button>
@@ -23,38 +26,63 @@
     </div>
     <div id="GIFarea"></div>
 
-    
+
 
     <script src="assets/javascript/main.js"></script>
     <script type="text/javascript">
-    
-    let APIkey = "YcdtOtpEnd8HWV0JOe4YRyPzpvm2OxO9";
-    $('#submitBtn').on("click", function () {
-        let newAnimal = document.getElementById("animalAdd").value;
-        let newBtn = $('<button class="animals" data-search="'+ newAnimal +'">'+ newAnimal + '</button>');
-        $("#buttonArea").append(newBtn);
-        
-    });
-    
-    $(document).on('click', '.animals', function() {
-        let buttonSearch = $(this).data("search");
-        // console.log(buttonSearch);
 
-        let queryURL = "https://api.giphy.com/v1/gifs/search?api_key=" + APIkey + "&q=" + buttonSearch + "&limit=10";
+        let APIkey = "YcdtOtpEnd8HWV0JOe4YRyPzpvm2OxO9";
+        $('#submitBtn').on("click", function () {
+            let newAnimal = document.getElementById("animalAdd").value;
+            let newBtn = $('<button class="animals" data-search="' + newAnimal + '">' + newAnimal + '</button>');
+            $("#buttonArea").append(newBtn);
 
-        $.ajax({url: queryURL, method: "GET"}).done(function(response) {
-        console.log(response);
-        console.log(queryURL);
-            for (let i = 0; i<response.data.length; i++) {
-                let gif = $('<img src="' + response.data[i].images.fixed_height_still.url + '"> <p>Rating: '+ response.data[i].rating + '</p>');
-                $("#GIFarea").append(gif);    
-            };
         });
-    });
-    
+
+        $(document).on('click', '.animals', function () {
+            let buttonSearch = $(this).data("search");
+            // console.log(buttonSearch);
+
+            let queryURL = "https://api.giphy.com/v1/gifs/search?api_key=" + APIkey + "&q=" + buttonSearch + "&limit=10";
+
+            $("#GIFarea").empty();
+
+            $.ajax({ url: queryURL, method: "GET" }).done(function (response) {
+                console.log(response);
+                console.log(queryURL);
+                for (let i = 0; i < response.data.length; i++) {
+                    let gif = $('<img src="' + response.data[i].images.fixed_height_still.url + '"> <p>Rating: ' + response.data[i].rating + '</p>');
+                    gif.attr("data-still", response.data[i].images.fixed_height_still.url)
+                    gif.attr("data-animate", response.data[i].images.fixed_height.url)
+                    gif.attr("data-state", "still")
+                    gif.attr("class", "gif")
+
+                    $("#GIFarea").prepend(gif);
+                };
+                $(".gif").on("click", function () {
+                    var state = $(this).attr("data-state");
+                    console.log(state);
+
+                    if (state === "still") {
+                        $(this).attr("src", $(this).attr("data-animate"));
+                        $(this).attr("data-state", "animate");
+                    } else {
+                        $(this).attr("src", $(this).attr("data-still"))
+                        $(this).attr("data-state", "still");
+                    }
+
+                    var dataAnimate = $(this).attr('data-animate');
+                })
+            });
+        });
+
+
+
+
 
 
     </script>
-    
+
 </body>
+
 </html>
