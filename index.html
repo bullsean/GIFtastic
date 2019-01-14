@@ -7,79 +7,49 @@
     <title>GIFtastic Assignment</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/reset.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
 
 </head>
 
 <body>
-    <form>
-        Add an animal! <br>
-        <input id="animalAdd" type="text" name="animal" value="">
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4">GIFtastic Search!</h1>
+            <hr> 
+            <p class="lead">Create your own GIF search using this easy-to-use app. Simply enter a search term below. Your term will be saved in a button you can come back to in the future. Click the "Dogs" button below to get an idea of what you can make!</p>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <div id="buttonArea">
+                    <button class="animals" data-search="dogs">Dogs</button>
+                </div>
+                <div id="GIFarea"></div>
+            </div>
+            <div class="col-sm">
+                <form>
+                    Enter your search phrase! <br>
+                    <input id="animalAdd" type="text" name="animal" value="">
+                    <br>
+                </form>
+                <button id="submitBtn" type="submit">Add</button>
+            </div>
+        </div>
         <br>
-    </form>
-    <button id="submitBtn">Add</button>
-    <br>
-    <div id="buttonArea">
-        <button class="animals" data-search="dogs">Dogs</button>
     </div>
-    <div id="GIFarea"></div>
 
 
 
     <script src="assets/javascript/main.js"></script>
     <script type="text/javascript">
-
-        let APIkey = "YcdtOtpEnd8HWV0JOe4YRyPzpvm2OxO9";
-        $('#submitBtn').on("click", function () {
-            let newAnimal = document.getElementById("animalAdd").value;
-            let newBtn = $('<button class="animals" data-search="' + newAnimal + '">' + newAnimal + '</button>');
-            $("#buttonArea").append(newBtn);
-
-        });
-
-        $(document).on('click', '.animals', function () {
-            let buttonSearch = $(this).data("search");
-            // console.log(buttonSearch);
-
-            let queryURL = "https://api.giphy.com/v1/gifs/search?api_key=" + APIkey + "&q=" + buttonSearch + "&limit=10";
-
-            $("#GIFarea").empty();
-
-            $.ajax({ url: queryURL, method: "GET" }).done(function (response) {
-                console.log(response);
-                console.log(queryURL);
-                for (let i = 0; i < response.data.length; i++) {
-                    let gif = $('<img src="' + response.data[i].images.fixed_height_still.url + '"> <p>Rating: ' + response.data[i].rating + '</p>');
-                    gif.attr("data-still", response.data[i].images.fixed_height_still.url)
-                    gif.attr("data-animate", response.data[i].images.fixed_height.url)
-                    gif.attr("data-state", "still")
-                    gif.attr("class", "gif")
-
-                    $("#GIFarea").prepend(gif);
-                };
-                $(".gif").on("click", function () {
-                    var state = $(this).attr("data-state");
-                    console.log(state);
-
-                    if (state === "still") {
-                        $(this).attr("src", $(this).attr("data-animate"));
-                        $(this).attr("data-state", "animate");
-                    } else {
-                        $(this).attr("src", $(this).attr("data-still"))
-                        $(this).attr("data-state", "still");
-                    }
-
-                    var dataAnimate = $(this).attr('data-animate');
-                })
-            });
-        });
-
-
-
-
-
 
     </script>
 
